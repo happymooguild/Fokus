@@ -1,8 +1,8 @@
 /*
- * Phocus content script.
+ * Fokus content script.
  *
- * Almost all the hiding is done by phocus.css. This script's job is to keep
- * <html data-phocus="..."> in sync with storage, and to handle the handful of
+ * Almost all the hiding is done by fokus.css. This script's job is to keep
+ * <html data-fokus="..."> in sync with storage, and to handle the handful of
  * features CSS can't express on its own:
  *
  *   - sidebar sections that can only be identified by where their links point
@@ -14,7 +14,7 @@
  */
 
 (() => {
-  const { GROUPS, ALL, DEFAULTS, STORAGE_KEY } = globalThis.PHOCUS;
+  const { GROUPS, ALL, DEFAULTS, STORAGE_KEY } = globalThis.FOKUS;
   const FEATURE_IDS = ALL.map((f) => f.id);
 
   /** Current settings; replaced wholesale whenever storage changes. */
@@ -30,8 +30,8 @@
     const enabled = FEATURE_IDS.filter(isOn);
     const root = document.documentElement;
     const next = enabled.join(' ');
-    if (root.getAttribute('data-phocus') !== next) {
-      root.setAttribute('data-phocus', next);
+    if (root.getAttribute('data-fokus') !== next) {
+      root.setAttribute('data-fokus', next);
     }
   }
 
@@ -126,9 +126,9 @@
         votes[leader] >= 2 && votes[leader] * 2 >= entries ? leader : null;
 
       if (winner) {
-        section.setAttribute('data-phocus-guide', winner);
+        section.setAttribute('data-fokus-guide', winner);
       } else {
-        section.removeAttribute('data-phocus-guide');
+        section.removeAttribute('data-fokus-guide');
       }
     }
 
@@ -137,7 +137,7 @@
       'ytd-mini-guide-entry-renderer a[href*="/feed/subscriptions"]';
     for (const anchor of document.querySelectorAll(subsSelector)) {
       const entry = anchor.closest('ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer');
-      if (entry) entry.setAttribute('data-phocus-guide', 'subscriptions');
+      if (entry) entry.setAttribute('data-fokus-guide', 'subscriptions');
     }
 
     tagShortsEntries();
@@ -167,7 +167,7 @@
     const selector = 'ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer';
     for (const entry of document.querySelectorAll(selector)) {
       // Don't clobber the Subscriptions tag on a non-Shorts entry.
-      if (isShortsEntry(entry)) entry.setAttribute('data-phocus-guide', 'shorts');
+      if (isShortsEntry(entry)) entry.setAttribute('data-fokus-guide', 'shorts');
     }
   }
 
@@ -202,7 +202,7 @@
   function toBridge(cmd, value) {
     if (lastPosted[cmd] === value) return;
     lastPosted[cmd] = value;
-    window.postMessage({ __phocus: true, cmd, value }, location.origin);
+    window.postMessage({ __fokus: true, cmd, value }, location.origin);
   }
 
   /*

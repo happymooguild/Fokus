@@ -1,4 +1,4 @@
-/* Phocus popup — dark, glassy, and responsive to every hover. */
+/* Fokus popup — dark, glassy, and responsive to every hover. */
 
 :root {
   --bg: #0d0d11;
@@ -496,7 +496,7 @@ body > * {
   box-shadow: none;
 }
 
-/* Everything dims while Phocus is paused, without losing the toggle states. */
+/* Everything dims while Fokus is paused, without losing the toggle states. */
 body.paused .list {
   opacity: 0.4;
   filter: saturate(0.35);

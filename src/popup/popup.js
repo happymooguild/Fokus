@@ -7,7 +7,7 @@
  * `settings` object, so what you see is always what was saved.
  */
 
-const { GROUPS, ALL, DEFAULTS, STORAGE_KEY, SPONSOR_URL } = globalThis.PHOCUS;
+const { GROUPS, ALL, DEFAULTS, STORAGE_KEY, SPONSOR_URL } = globalThis.FOKUS;
 
 const listEl = document.getElementById('list');
 const emptyEl = document.getElementById('empty');

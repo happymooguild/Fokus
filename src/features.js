@@ -1,20 +1,20 @@
 /**
- * Single source of truth for every toggle Phocus offers.
+ * Single source of truth for every toggle Fokus offers.
  *
  * Loaded as a plain script by both the popup and the content script, so it
  * declares one global and nothing else.
  *
  * Each feature:
- *   id       stable key used in storage and as the CSS token in [data-phocus~="id"]
+ *   id       stable key used in storage and as the CSS token in [data-fokus~="id"]
  *   label    what the popup shows
  *   hint     one line explaining what disappears, shown under the label on hover
  *   children optional sub-toggles; the parent hides the whole container, each
  *            child hides one piece of it
  *   js       true when CSS alone can't do the job and content.js has to help
  */
-globalThis.PHOCUS = globalThis.PHOCUS || {};
+globalThis.FOKUS = globalThis.FOKUS || {};
 
-globalThis.PHOCUS.GROUPS = [
+globalThis.FOKUS.GROUPS = [
   {
     id: 'feed',
     label: 'Feed & navigation',
@@ -171,20 +171,20 @@ globalThis.PHOCUS.GROUPS = [
 ];
 
 /** Flat list of every feature, parents and children alike, in display order. */
-globalThis.PHOCUS.ALL = globalThis.PHOCUS.GROUPS.flatMap((group) =>
+globalThis.FOKUS.ALL = globalThis.FOKUS.GROUPS.flatMap((group) =>
   group.features.flatMap((feature) => [feature, ...(feature.children || [])])
 );
 
 /** Feature ids that need JavaScript, not just a CSS rule. */
-globalThis.PHOCUS.JS_FEATURES = globalThis.PHOCUS.ALL.filter((f) => f.js).map((f) => f.id);
+globalThis.FOKUS.JS_FEATURES = globalThis.FOKUS.ALL.filter((f) => f.js).map((f) => f.id);
 
 /** What a fresh install looks like: the two headline distractions, nothing else. */
-globalThis.PHOCUS.DEFAULTS = {
+globalThis.FOKUS.DEFAULTS = {
   master: true,
   features: { homepage_feed: true, shorts: true }
 };
 
-globalThis.PHOCUS.STORAGE_KEY = 'phocus:settings';
+globalThis.FOKUS.STORAGE_KEY = 'fokus:settings';
 
 /** The link behind "Support me" in the popup footer. */
-globalThis.PHOCUS.SPONSOR_URL = 'https://github.com/sponsors/1Shubham7';
+globalThis.FOKUS.SPONSOR_URL = 'https://github.com/sponsors/1Shubham7';

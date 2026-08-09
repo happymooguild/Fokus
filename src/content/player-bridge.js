@@ -43,7 +43,7 @@
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
     const data = event.data;
-    if (!data || data.__phocus !== true || data.cmd !== 'annotations') return;
+    if (!data || data.__fokus !== true || data.cmd !== 'annotations') return;
 
     wantAnnotationsHidden = Boolean(data.value);
     sync();

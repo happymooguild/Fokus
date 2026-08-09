@@ -1,0 +1,241 @@
+/*
+ * Fokus — every hiding rule lives here.
+ *
+ * The content script keeps a space-separated list of enabled feature ids on
+ * <html data-fokus="...">, so each rule is gated on [data-fokus~="id"].
+ * Flipping a toggle rewrites that one attribute and the page updates on the
+ * next style recalc — no reload, no re-injection, nothing to undo.
+ *
+ * Selectors marked "tagged by content.js" rely on data attributes the script
+ * adds, because the thing being matched isn't expressible in CSS alone.
+ */
+
+/* ==========================================================================
+   FEED & NAVIGATION
+   ========================================================================== */
+
+/* --- Homepage feed ------------------------------------------------------ */
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"] ytd-feed-filter-chip-bar-renderer,
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"] #chips-wrapper,
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"] #header.ytd-rich-grid-renderer,
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"] ytd-rich-section-renderer {
+  display: none !important;
+}
+
+/* Leave something calm behind instead of a blank void. */
+html[data-fokus~="homepage_feed"] ytd-browse[page-subtype="home"]::after {
+  content: 'Feed hidden by Fokus';
+  display: block;
+  padding: 22vh 24px 0;
+  text-align: center;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--yt-spec-text-secondary, #909090);
+  opacity: 0.55;
+}
+
+/* --- Shorts ------------------------------------------------------------- */
+/* Shelves and rows */
+html[data-fokus~="shorts"] ytd-rich-shelf-renderer[is-shorts],
+html[data-fokus~="shorts"] ytd-reel-shelf-renderer,
+html[data-fokus~="shorts"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+html[data-fokus~="shorts"] ytd-item-section-renderer:has(> #contents > ytd-reel-shelf-renderer),
+html[data-fokus~="shorts"] grid-shelf-view-model:has(ytm-shorts-lockup-view-model),
+/* Individual Shorts thumbnails, old and new lockup systems alike */
+html[data-fokus~="shorts"] ytm-shorts-lockup-view-model,
+html[data-fokus~="shorts"] ytm-shorts-lockup-view-model-v2,
+html[data-fokus~="shorts"] ytd-rich-item-renderer:has(ytm-shorts-lockup-view-model),
+html[data-fokus~="shorts"] ytd-rich-item-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] ytd-video-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] ytd-grid-video-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] ytd-compact-video-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] yt-lockup-view-model:has(a[href^="/shorts"]),
+/* Navigation entries, full sidebar / collapsed rail / channel tab.
+   The href variants catch what they can; the tag is set by content.js for the
+   Shorts nav item, whose anchor carries no href. */
+html[data-fokus~="shorts"] ytd-guide-entry-renderer[data-fokus-guide="shorts"],
+html[data-fokus~="shorts"] ytd-mini-guide-entry-renderer[data-fokus-guide="shorts"],
+html[data-fokus~="shorts"] ytd-guide-entry-renderer:has(a[title="Shorts"]),
+html[data-fokus~="shorts"] ytd-mini-guide-entry-renderer:has(a[title="Shorts"]),
+html[data-fokus~="shorts"] ytd-guide-entry-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
+html[data-fokus~="shorts"] yt-tab-shape[tab-title="Shorts"],
+html[data-fokus~="shorts"] ytd-tab-renderer[tab-identifier="shorts"] {
+  display: none !important;
+}
+
+/* --- Left-sidebar sections (tagged by content.js) ----------------------- */
+html[data-fokus~="explore_trending"] ytd-guide-section-renderer[data-fokus-guide="explore"],
+html[data-fokus~="explore_trending"] ytd-browse[page-subtype="trending"] #contents,
+html[data-fokus~="more_from_youtube"] ytd-guide-section-renderer[data-fokus-guide="more"],
+html[data-fokus~="subscriptions"] ytd-guide-entry-renderer[data-fokus-guide="subscriptions"],
+html[data-fokus~="subscriptions"] ytd-mini-guide-entry-renderer[data-fokus-guide="subscriptions"] {
+  display: none !important;
+}
+
+/* ==========================================================================
+   WATCH PAGE
+   ========================================================================== */
+
+/* --- Whole sidebar ------------------------------------------------------ */
+html[data-fokus~="sidebar"] ytd-watch-flexy #secondary,
+html[data-fokus~="sidebar"] ytd-watch-flexy #secondary-inner {
+  display: none !important;
+}
+
+/*
+ * The player can't simply fill the freed space — YouTube caps it by viewport
+ * height, so stretching the column would only push it left of a dead gap.
+ * Centre the column instead, using YouTube's own width variable.
+ */
+html[data-fokus~="sidebar"] ytd-watch-flexy:not([theater]):not([fullscreen]) #primary.ytd-watch-flexy {
+  max-width: 100% !important;
+}
+html[data-fokus~="sidebar"] ytd-watch-flexy:not([theater]):not([fullscreen]) #primary-inner.ytd-watch-flexy {
+  max-width: var(--ytd-watch-flexy-max-player-width, 100%) !important;
+  margin-inline: auto !important;
+}
+
+/* --- Sidebar pieces ----------------------------------------------------- */
+html[data-fokus~="related"] ytd-watch-flexy #related,
+html[data-fokus~="related"] ytd-watch-next-secondary-results-renderer {
+  display: none !important;
+}
+
+html[data-fokus~="live_chat"] ytd-watch-flexy #chat,
+html[data-fokus~="live_chat"] ytd-watch-flexy #chat-container,
+html[data-fokus~="live_chat"] ytd-live-chat-frame,
+html[data-fokus~="live_chat"] ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-live-chat"] {
+  display: none !important;
+}
+
+html[data-fokus~="playlist"] ytd-watch-flexy #playlist,
+html[data-fokus~="playlist"] ytd-watch-flexy ytd-playlist-panel-renderer {
+  display: none !important;
+}
+
+/* --- Video info --------------------------------------------------------- */
+/* The parent keeps the title and removes the three blocks below it. */
+html[data-fokus~="video_info"] ytd-watch-metadata #top-row,
+html[data-fokus~="video_info"] ytd-watch-metadata #bottom-row {
+  display: none !important;
+}
+
+html[data-fokus~="buttons_bar"] ytd-watch-metadata #top-row #actions,
+html[data-fokus~="buttons_bar"] ytd-watch-metadata #top-level-buttons-computed {
+  display: none !important;
+}
+
+html[data-fokus~="channel"] ytd-watch-metadata #owner {
+  display: none !important;
+}
+
+html[data-fokus~="description"] ytd-watch-metadata #bottom-row,
+html[data-fokus~="description"] ytd-watch-metadata #description {
+  display: none !important;
+}
+
+/* --- Comments ----------------------------------------------------------- */
+html[data-fokus~="comments"] ytd-comments#comments,
+html[data-fokus~="comments"] #comments.ytd-watch-flexy,
+html[data-fokus~="comments"] ytd-item-section-renderer[section-identifier="comment-item-section"] {
+  display: none !important;
+}
+
+/* --- Mix / radio playlists ---------------------------------------------- */
+html[data-fokus~="mixes"] ytd-compact-radio-renderer,
+html[data-fokus~="mixes"] ytd-radio-renderer,
+html[data-fokus~="mixes"] yt-lockup-view-model:has(a[href*="list=RD"]),
+html[data-fokus~="mixes"] ytd-rich-item-renderer:has(a[href*="list=RD"]),
+html[data-fokus~="mixes"] ytd-compact-playlist-renderer:has(a[href*="list=RD"]),
+html[data-fokus~="mixes"] ytd-playlist-renderer:has(a[href*="list=RD"]) {
+  display: none !important;
+}
+
+/* --- Merch, tickets, offers --------------------------------------------- */
+html[data-fokus~="merch"] ytd-merch-shelf-renderer,
+html[data-fokus~="merch"] ytd-donation-shelf-renderer,
+html[data-fokus~="merch"] ytd-ticket-shelf-renderer,
+html[data-fokus~="merch"] #offer-module,
+html[data-fokus~="merch"] ytd-watch-metadata #middle-row,
+html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-product-list"],
+html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="shopping_panel_for_entry_point_below_video"],
+/* The newer shopping shelf sits outside the merch shelf, in its own sidebar
+   panel — take the panel too, so no empty shell is left behind. */
+html[data-fokus~="merch"] ytd-product-list-renderer,
+html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer:has(ytd-product-list-renderer) {
+  display: none !important;
+}
+
+/* ==========================================================================
+   PLAYER
+   ========================================================================== */
+
+/*
+ * Two generations of videowall run side by side. The legacy one is the
+ * endscreen-content grid; the current one is .ytp-fullscreen-grid, whose
+ * children are all named ytp-modern-videowall-*. The grid holds nothing but
+ * suggestions and is display:none except at the very end of a video — playing
+ * or paused mid-video it isn't there — so taking the container is safe.
+ */
+html[data-fokus~="endscreen_videowall"] .html5-endscreen,
+html[data-fokus~="endscreen_videowall"] .ytp-endscreen-content,
+html[data-fokus~="endscreen_videowall"] .ytp-player-content.videowall-endscreen,
+html[data-fokus~="endscreen_videowall"] .ytp-fullscreen-grid,
+html[data-fokus~="endscreen_videowall"] .ytp-modern-videowall-still {
+  display: none !important;
+}
+
+html[data-fokus~="endscreen_cards"] .ytp-ce-element,
+html[data-fokus~="endscreen_cards"] .ytp-cards-button,
+html[data-fokus~="endscreen_cards"] .ytp-cards-teaser,
+html[data-fokus~="endscreen_cards"] .iv-drawer,
+html[data-fokus~="endscreen_cards"] .ytp-suggested-action {
+  display: none !important;
+}
+
+html[data-fokus~="annotations"] .annotation,
+html[data-fokus~="annotations"] .video-annotations,
+html[data-fokus~="annotations"] .iv-branding {
+  display: none !important;
+}
+
+/* ==========================================================================
+   HEADER & SEARCH
+   ========================================================================== */
+
+html[data-fokus~="top_header"] #masthead-container.ytd-app,
+html[data-fokus~="top_header"] ytd-masthead {
+  display: none !important;
+}
+
+/* The masthead is fixed and the page is pushed down by its height; reclaim it. */
+html[data-fokus~="top_header"] ytd-app #page-manager.ytd-app {
+  margin-top: 0 !important;
+}
+html[data-fokus~="top_header"] ytd-app tp-yt-app-drawer#guide {
+  top: 0 !important;
+}
+html[data-fokus~="top_header"] ytd-mini-guide-renderer {
+  top: 0 !important;
+}
+
+html[data-fokus~="notification_bell"] ytd-notification-topbar-button-renderer {
+  display: none !important;
+}
+
+/* --- Search page noise --------------------------------------------------- */
+/* Keep videos, channels and playlists; drop every promotional shelf. */
+html[data-fokus~="search_noise"] ytd-search ytd-shelf-renderer,
+html[data-fokus~="search_noise"] ytd-search ytd-reel-shelf-renderer,
+html[data-fokus~="search_noise"] ytd-search ytd-horizontal-card-list-renderer,
+html[data-fokus~="search_noise"] ytd-search grid-shelf-view-model,
+html[data-fokus~="search_noise"] ytd-search ytd-secondary-search-container-renderer,
+html[data-fokus~="search_noise"] ytd-search ytd-universal-watch-card-renderer,
+html[data-fokus~="search_noise"] ytd-search ytd-search-refinement-card-renderer,
+html[data-fokus~="search_noise"] ytd-search ytd-shelf-renderer[thumbnail-style],
+html[data-fokus~="search_noise"] ytd-search ytd-item-section-renderer:has(> #contents > ytd-shelf-renderer) {
+  display: none !important;
+}
