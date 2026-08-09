@@ -208,9 +208,28 @@
     window.postMessage({ __phocus: true, cmd, value }, location.origin);
   }
 
+  /** The toggle element currently under observation, so we watch it only once. */
+  let watchedAutoplayToggle = null;
+
+  /*
+   * Autoplay flips by changing aria-checked and nothing else, which the main
+   * observer can't see — it watches childList only, because turning on
+   * attribute notifications for the whole of YouTube would be ruinous. Put a
+   * narrow observer on the toggle itself instead, so switching autoplay back on
+   * while "disable autoplay" is enabled gets undone immediately.
+   */
   function autoplayButton() {
     const el = document.querySelector('.ytp-autonav-toggle-button');
     if (!el) return null;
+
+    if (el !== watchedAutoplayToggle) {
+      watchedAutoplayToggle = el;
+      new MutationObserver(() => enforcePlayer()).observe(el, {
+        attributes: true,
+        attributeFilter: ['aria-checked']
+      });
+    }
+
     return {
       clickable: el.closest('button') || el,
       on: el.getAttribute('aria-checked') === 'true'
