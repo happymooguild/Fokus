@@ -80,21 +80,26 @@ body > * {
   min-width: 0;
 }
 
+/*
+ * The mark is its own tile: the red field is the artwork, so the container
+ * carries no background, border or radius of its own.
+ */
 .mark {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
-  background: var(--panel);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 0 18px -6px rgba(139, 92, 246, 0.55);
+  width: 32px;
+  height: 32px;
+  box-shadow: 0 0 18px -6px rgba(236, 48, 19, 0.6);
   transition: box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
 }
 
+.mark svg {
+  display: block;
+}
+
 .header:hover .mark {
-  transform: rotate(-8deg) scale(1.05);
-  box-shadow: 0 0 24px -4px rgba(139, 92, 246, 0.8);
+  transform: scale(1.06);
+  box-shadow: 0 0 24px -4px rgba(236, 48, 19, 0.85);
 }
 
 .brand-text h1 {
