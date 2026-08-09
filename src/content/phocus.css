@@ -161,7 +161,11 @@ html[data-phocus~="merch"] ytd-ticket-shelf-renderer,
 html[data-phocus~="merch"] #offer-module,
 html[data-phocus~="merch"] ytd-watch-metadata #middle-row,
 html[data-phocus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-product-list"],
-html[data-phocus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="shopping_panel_for_entry_point_below_video"] {
+html[data-phocus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="shopping_panel_for_entry_point_below_video"],
+/* The newer shopping shelf sits outside the merch shelf, in its own sidebar
+   panel — take the panel too, so no empty shell is left behind. */
+html[data-phocus~="merch"] ytd-product-list-renderer,
+html[data-phocus~="merch"] ytd-engagement-panel-section-list-renderer:has(ytd-product-list-renderer) {
   display: none !important;
 }
 
