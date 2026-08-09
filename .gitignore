@@ -1,0 +1,13 @@
+# Local scratch
+src/popup/_preview.html
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Packaging output
+*.zip
+*.crx
+*.pem

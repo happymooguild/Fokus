@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Phocus</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="url(#g)" stroke-width="2" />
+            <circle cx="12" cy="12" r="3.2" fill="url(#g)" />
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="24" y2="24">
+                <stop offset="0" stop-color="#a78bfa" />
+                <stop offset="1" stop-color="#22d3ee" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>phocus</h1>
+          <p id="summary" class="summary">&nbsp;</p>
+        </div>
+      </div>
+
+      <button
+        id="master"
+        class="master"
+        type="button"
+        role="switch"
+        aria-checked="true"
+        title="Pause Phocus without losing your toggles"
+      >
+        <span class="master-label">on</span>
+        <span class="master-track"><span class="master-knob"></span></span>
+      </button>
+    </header>
+
+    <div class="searchbar">
+      <svg class="search-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
+        <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <input id="filter" type="search" placeholder="Filter toggles…" autocomplete="off" spellcheck="false" />
+    </div>
+
+    <main id="list" class="list"></main>
+
+    <p id="empty" class="empty" hidden>Nothing matches that.</p>
+
+    <footer class="footer">
+      <a id="sponsor" class="sponsor" href="#" target="_blank" rel="noopener noreferrer">
+        <span class="heart" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="15" height="15">
+            <path
+              d="M12 20.5s-7.5-4.6-7.5-9.6A4.4 4.4 0 0 1 12 8.3a4.4 4.4 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="sponsor-text">
+          <strong>Support me</strong>
+          <small>Phocus is free and always will be</small>
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </footer>
+
+    <script src="../features.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
