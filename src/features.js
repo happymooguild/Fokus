@@ -132,7 +132,7 @@ globalThis.PHOCUS.GROUPS = [
       {
         id: 'autoplay',
         label: 'Autoplay',
-        hint: 'Stops YouTube queueing up the next video',
+        hint: 'Switches autoplay off once per page. Turn it back on in the player and this follows.',
         js: true,
         verb: 'Disable'
       },

@@ -20,9 +20,6 @@
   /** Current settings; replaced wholesale whenever storage changes. */
   let settings = structuredClone(DEFAULTS);
 
-  /** True only while *we* are the reason autoplay is off, so we can put it back. */
-  let autoplaySuppressedByUs = false;
-
   const isOn = (id) => settings.master !== false && settings.features[id] === true;
 
   /* ---------------------------------------------------------------------- */
@@ -208,49 +205,75 @@
     window.postMessage({ __phocus: true, cmd, value }, location.origin);
   }
 
-  /** The toggle element currently under observation, so we watch it only once. */
-  let watchedAutoplayToggle = null;
-
   /*
-   * Autoplay flips by changing aria-checked and nothing else, which the main
-   * observer can't see — it watches childList only, because turning on
-   * attribute notifications for the whole of YouTube would be ruinous. Put a
-   * narrow observer on the toggle itself instead, so switching autoplay back on
-   * while "disable autoplay" is enabled gets undone immediately.
+   * Autoplay is a one-shot, not a rule we police.
+   *
+   * With "disable autoplay" on we switch YouTube's autoplay off once per page
+   * and then leave the control alone. If you switch it back on in the player,
+   * that's you changing your mind, so our own toggle follows you off — the
+   * popup should never claim something the player is visibly contradicting.
+   *
+   * Intent is read from a real click rather than from aria-checked, because
+   * YouTube sets that attribute itself while restoring player state, and a
+   * restore is not a decision.
    */
-  function autoplayButton() {
-    const el = document.querySelector('.ytp-autonav-toggle-button');
-    if (!el) return null;
+  let autoplayAppliedThisPage = false;
 
-    if (el !== watchedAutoplayToggle) {
-      watchedAutoplayToggle = el;
-      new MutationObserver(() => enforcePlayer()).observe(el, {
-        attributes: true,
-        attributeFilter: ['aria-checked']
-      });
-    }
-
-    return {
-      clickable: el.closest('button') || el,
-      on: el.getAttribute('aria-checked') === 'true'
-    };
+  function autoplayToggle() {
+    return document.querySelector('.ytp-autonav-toggle-button');
   }
 
-  function enforcePlayer() {
-    const wantAutoplayOff = isOn('autoplay');
-    const toggle = autoplayButton();
-
-    if (toggle) {
-      if (wantAutoplayOff && toggle.on) {
-        toggle.clickable.click();
-        autoplaySuppressedByUs = true;
-      } else if (!wantAutoplayOff && !toggle.on && autoplaySuppressedByUs) {
-        // Only undo what we did — never override a preference the user set themselves.
-        toggle.clickable.click();
-        autoplaySuppressedByUs = false;
-      }
+  function applyAutoplayOnce() {
+    if (!isOn('autoplay')) {
+      // Re-arm, so switching the toggle back on acts again on this same page.
+      autoplayAppliedThisPage = false;
+      return;
     }
-    toBridge('autoplay', wantAutoplayOff);
+    if (autoplayAppliedThisPage) return;
+
+    const el = autoplayToggle();
+    if (!el) return;
+
+    if (el.getAttribute('aria-checked') === 'true') {
+      (el.closest('button') || el).click();
+    }
+    autoplayAppliedThisPage = true;
+  }
+
+  /** The user turned autoplay back on: stop claiming we disabled it. */
+  function followUserBackToAutoplay() {
+    settings.features.autoplay = false;
+    applyAttribute();
+
+    chrome.storage.sync.get(STORAGE_KEY, (result) => {
+      const stored = result[STORAGE_KEY] || {};
+      chrome.storage.sync.set({
+        [STORAGE_KEY]: {
+          master: stored.master !== false,
+          features: { ...(stored.features || {}), autoplay: false }
+        }
+      });
+    });
+  }
+
+  document.addEventListener(
+    'click',
+    (event) => {
+      // isTrusted separates a real click from the one applyAutoplayOnce makes.
+      if (!event.isTrusted || !isOn('autoplay')) return;
+      if (!event.target.closest?.('.ytp-autonav-toggle-button-container, .ytp-autonav-toggle-button')) {
+        return;
+      }
+      // Let YouTube commit the new state before reading it back.
+      setTimeout(() => {
+        if (autoplayToggle()?.getAttribute('aria-checked') === 'true') followUserBackToAutoplay();
+      }, 150);
+    },
+    true
+  );
+
+  function enforcePlayer() {
+    applyAutoplayOnce();
     toBridge('annotations', isOn('annotations'));
   }
 
@@ -304,8 +327,10 @@
     // SPA route changes fire these rather than a real page load.
     for (const event of ['yt-navigate-finish', 'yt-page-data-updated']) {
       document.addEventListener(event, () => {
-        // New page, new player: let the bridge hear the settings again.
+        // New page, new player: let the bridge hear the settings again, and
+        // re-arm the once-per-page autoplay nudge.
         for (const key of Object.keys(lastPosted)) delete lastPosted[key];
+        autoplayAppliedThisPage = false;
         enforceRedirects();
         schedule();
       });

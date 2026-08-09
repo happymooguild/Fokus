@@ -59,10 +59,13 @@ Three things can't be done in CSS, so the content script handles them:
 - **Redirects.** With Shorts hidden, `/shorts/<id>` becomes `/watch?v=<id>` so
   the video still plays, just in the normal player. With Subscriptions hidden,
   `/feed/subscriptions` goes to the homepage.
-- **Autoplay and annotations**, which live behind the player's JS API.
+- **Autoplay**, which is a one-shot rather than a rule. Phocus switches
+  autoplay off once per page and then leaves the control alone. Switch it back
+  on in the player and the Phocus toggle follows you off, so the popup never
+  claims something the player is visibly contradicting.
+- **Annotations**, which live behind the player's JS API.
   `src/content/player-bridge.js` runs in the page world to reach it. It only
-  ever suppresses, and only ever undoes a suppression it performed — if you had
-  autoplay off already, Phocus will never switch it on.
+  ever suppresses, and only ever undoes a suppression it performed.
 
 ## Layout
 

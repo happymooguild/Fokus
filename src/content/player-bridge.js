@@ -2,60 +2,50 @@
  * Runs in the page's own JS world so it can reach the YouTube player object,
  * which the isolated content-script world can't see.
  *
+ * Annotations only. Autoplay is handled entirely by the content script clicking
+ * the visible toggle — the player's setAutonavState leaves that toggle's state
+ * untouched, so driving both would have meant two sources of truth disagreeing.
+ *
  * Rule of the file: only ever suppress, and only ever undo a suppression this
- * script performed. If a setting is off, the player is left completely alone —
- * turning "disable autoplay" off must not switch autoplay *on* for someone who
- * had it off to begin with.
+ * script performed.
  */
 
 (() => {
-  const wanted = { autoplay: false, annotations: false };
-  const suppressedByUs = { autoplay: false, annotations: false };
+  let wantAnnotationsHidden = false;
+  let suppressedByUs = false;
 
   function player() {
     const el = document.getElementById('movie_player');
-    return el && typeof el.getPlayerState === 'function' ? el : null;
+    return el && typeof el.unloadModule === 'function' ? el : null;
   }
 
   function sync() {
     const p = player();
     if (!p) return;
 
-    // 1 disables the up-next queue. The visible toggle is driven by the content
-    // script clicking it; this is the belt to that pair of braces.
-    if (wanted.autoplay && typeof p.setAutonavState === 'function') {
-      try {
-        p.setAutonavState(1);
-        suppressedByUs.autoplay = true;
-      } catch {
-        /* player not ready; a later sync will catch it */
-      }
-    }
-
-    if (wanted.annotations) {
+    if (wantAnnotationsHidden) {
       try {
         p.unloadModule('annotations_module');
-        suppressedByUs.annotations = true;
+        suppressedByUs = true;
       } catch {
         /* module absent on this video, nothing to do */
       }
-    } else if (suppressedByUs.annotations) {
+    } else if (suppressedByUs) {
       try {
         p.loadModule('annotations_module');
       } catch {
         /* ignore */
       }
-      suppressedByUs.annotations = false;
+      suppressedByUs = false;
     }
   }
 
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
     const data = event.data;
-    if (!data || data.__phocus !== true) return;
-    if (!(data.cmd in wanted)) return;
+    if (!data || data.__phocus !== true || data.cmd !== 'annotations') return;
 
-    wanted[data.cmd] = Boolean(data.value);
+    wantAnnotationsHidden = Boolean(data.value);
     sync();
   });
 
