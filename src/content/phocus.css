@@ -173,9 +173,18 @@ html[data-phocus~="merch"] ytd-engagement-panel-section-list-renderer:has(ytd-pr
    PLAYER
    ========================================================================== */
 
+/*
+ * Two generations of videowall run side by side. The legacy one is the
+ * endscreen-content grid; the current one is .ytp-fullscreen-grid, whose
+ * children are all named ytp-modern-videowall-*. The grid holds nothing but
+ * suggestions and is display:none except at the very end of a video — playing
+ * or paused mid-video it isn't there — so taking the container is safe.
+ */
 html[data-phocus~="endscreen_videowall"] .html5-endscreen,
 html[data-phocus~="endscreen_videowall"] .ytp-endscreen-content,
-html[data-phocus~="endscreen_videowall"] .ytp-player-content.videowall-endscreen {
+html[data-phocus~="endscreen_videowall"] .ytp-player-content.videowall-endscreen,
+html[data-phocus~="endscreen_videowall"] .ytp-fullscreen-grid,
+html[data-phocus~="endscreen_videowall"] .ytp-modern-videowall-still {
   display: none !important;
 }
 
