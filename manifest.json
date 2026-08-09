@@ -3,7 +3,7 @@
   "name": "Fokus - Take back YouTube",
   "short_name": "Fokus",
   "version": "1.0.0",
-  "description": "Toggle away YouTube's distractions - Shorts, the homepage feed, recommendations, comments and more. Every switch is reversible, any time.",
+  "description": "Hide YouTube's distractions: Shorts, the homepage feed, recommendations, comments and more. Every switch is reversible.",
   "homepage_url": "https://github.com/happymooguild/fokus",
   "icons": {
     "16": "icons/icon16.png",
