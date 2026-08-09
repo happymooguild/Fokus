@@ -142,6 +142,36 @@
       const entry = anchor.closest('ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer');
       if (entry) entry.setAttribute('data-phocus-guide', 'subscriptions');
     }
+
+    tagShortsEntries();
+  }
+
+  /*
+   * The Shorts nav item is the odd one out: its anchor carries no href at all,
+   * because YouTube routes it through the Polymer router instead. Those JS
+   * properties are invisible from an isolated content script, so identify it by
+   * what does survive into the DOM — the title (Shorts is a brand name and goes
+   * untranslated), the icon glyph, and an href when one happens to be present.
+   */
+  const SHORTS_GLYPH = 'm13.467 1.19';
+
+  function isShortsEntry(entry) {
+    const anchor = entry.querySelector('a');
+    if (anchor) {
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('/shorts')) return true;
+      if (anchor.getAttribute('title') === 'Shorts') return true;
+    }
+    const path = entry.querySelector('yt-icon path')?.getAttribute('d');
+    return Boolean(path && path.startsWith(SHORTS_GLYPH));
+  }
+
+  function tagShortsEntries() {
+    const selector = 'ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer';
+    for (const entry of document.querySelectorAll(selector)) {
+      // Don't clobber the Subscriptions tag on a non-Shorts entry.
+      if (isShortsEntry(entry)) entry.setAttribute('data-phocus-guide', 'shorts');
+    }
   }
 
   /* ---------------------------------------------------------------------- */

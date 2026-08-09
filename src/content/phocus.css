@@ -52,7 +52,13 @@ html[data-phocus~="shorts"] ytd-video-renderer:has(a[href^="/shorts"]),
 html[data-phocus~="shorts"] ytd-grid-video-renderer:has(a[href^="/shorts"]),
 html[data-phocus~="shorts"] ytd-compact-video-renderer:has(a[href^="/shorts"]),
 html[data-phocus~="shorts"] yt-lockup-view-model:has(a[href^="/shorts"]),
-/* Navigation entries, full sidebar / collapsed rail / channel tab */
+/* Navigation entries, full sidebar / collapsed rail / channel tab.
+   The href variants catch what they can; the tag is set by content.js for the
+   Shorts nav item, whose anchor carries no href. */
+html[data-phocus~="shorts"] ytd-guide-entry-renderer[data-phocus-guide="shorts"],
+html[data-phocus~="shorts"] ytd-mini-guide-entry-renderer[data-phocus-guide="shorts"],
+html[data-phocus~="shorts"] ytd-guide-entry-renderer:has(a[title="Shorts"]),
+html[data-phocus~="shorts"] ytd-mini-guide-entry-renderer:has(a[title="Shorts"]),
 html[data-phocus~="shorts"] ytd-guide-entry-renderer:has(a[href^="/shorts"]),
 html[data-phocus~="shorts"] ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
 html[data-phocus~="shorts"] yt-tab-shape[tab-title="Shorts"],
