@@ -88,3 +88,61 @@ sponsored by YouTube or Google.
 - The reversibility and privacy sections exist because they are the two things
   a reader weighs before installing something that rewrites a site they use
   daily.
+
+
+## Privacy tab answers
+
+### Single purpose
+
+```
+Fokus lets a user hide distracting parts of the YouTube website, such as the homepage feed, Shorts, recommended videos and comments. Each element has its own on/off switch in the extension popup, and turning a switch off restores that element immediately.
+```
+
+### storage justification
+
+```
+The storage permission holds the user's own switch settings and nothing else: which of the 23 interface elements they have chosen to hide, and whether the extension is currently paused. These are booleans keyed by element name, and they are the extension's entire state.
+
+They are written when the user flips a switch in the popup, and read by the content script to decide which CSS rules to apply to a YouTube page. chrome.storage.sync is used rather than local so the user's choices follow their Chrome profile across devices, which is the behaviour people expect from a settings panel.
+
+No personal data, browsing history, page content or identifiers are stored. Nothing is transmitted anywhere. Without this permission the extension could not remember a single choice and every switch would reset on each page load.
+```
+
+### Host permission justification (*://*.youtube.com/*)
+
+```
+Fokus exists solely to modify the YouTube interface, so it requests access to youtube.com and to no other site.
+
+The permission injects one stylesheet and one content script into YouTube pages. The stylesheet holds every hiding rule, each gated behind an attribute on the page's html element. The content script keeps that attribute in sync with the user's saved switches, and handles the cases CSS cannot express: identifying the Explore and More from YouTube sidebar sections by where their links point, redirecting a /shorts/ URL to the normal watch page when Shorts are hidden, and switching autoplay off once per page.
+
+No page content is read for any purpose other than deciding what to hide, no data leaves the browser, and the extension makes no network requests. activeTab would not work, because the rules must apply automatically on every YouTube page the user opens, not only after a toolbar click.
+```
+
+### Are you using remote code?
+
+```
+No.
+
+All code is contained in the uploaded package. The extension loads no external scripts, uses no eval or new Function, and makes no network requests of any kind. The only external URLs it contains are the GitHub repository link in homepage_url and the sponsor link in the popup footer. Both are ordinary hyperlinks the user may choose to click; neither is fetched or executed.
+```
+
+Verified against the shipped package: no fetch, XMLHttpRequest, eval, new
+Function, importScripts, WebSocket, sendBeacon or @import anywhere, and every
+popup resource is a local file.
+
+### What user data do you plan to collect?
+
+```
+None.
+
+Fokus collects no user data of any category: no personally identifiable information, health, financial or authentication information, no personal communications, location, web history, or user activity, and no website content.
+
+The extension reads the DOM of a YouTube page only to decide which elements to hide, entirely on the user's own machine. Nothing derived from it is stored, sent or shared. The single thing written to disk is the user's own set of on/off switches, held in chrome.storage.sync.
+
+There are no analytics, no telemetry, no error reporting, no accounts and no servers. The extension makes no network requests, so there is no channel through which data could leave the browser.
+```
+
+Tick no data categories. All three certifications at the foot of the tab can be
+accepted: the extension does not sell or transfer user data, does not use it for
+anything unrelated to its single purpose, and does not use it for creditworthiness
+or lending.
