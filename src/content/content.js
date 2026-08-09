@@ -117,7 +117,7 @@
 
       /*
        * Demand a clear majority before hiding a whole section. One stray match
-       * isn't enough — the You section links out to Studio, and the personal
+       * isn't enough - the You section links out to Studio, and the personal
        * sections are full of channel links that vote for nothing at all.
        */
       const entries = section.querySelectorAll('ytd-guide-entry-renderer').length;
@@ -147,7 +147,7 @@
    * The Shorts nav item is the odd one out: its anchor carries no href at all,
    * because YouTube routes it through the Polymer router instead. Those JS
    * properties are invisible from an isolated content script, so identify it by
-   * what does survive into the DOM — the title (Shorts is a brand name and goes
+   * what does survive into the DOM - the title (Shorts is a brand name and goes
    * untranslated), the icon glyph, and an href when one happens to be present.
    */
   const SHORTS_GLYPH = 'm13.467 1.19';
@@ -210,11 +210,11 @@
    *
    * With "disable autoplay" on we switch YouTube's autoplay off once per page
    * and then leave the control alone. If you switch it back on in the player,
-   * that's you changing your mind, so our own toggle follows you off — the
+   * that's you changing your mind, so our own toggle follows you off - the
    * popup should never claim something the player is visibly contradicting.
    *
    * Intent is read from aria-checked rather than from a click, because YouTube
-   * drives this control from a keydown handler as well as a click one — a user
+   * drives this control from a keydown handler as well as a click one - a user
    * toggling autoplay with the keyboard fires no click event at all. Watching
    * the attribute catches every route in.
    *

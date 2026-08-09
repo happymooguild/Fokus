@@ -169,7 +169,7 @@ function syncDom() {
   document.body.classList.toggle('paused', !settings.master);
 
   summaryEl.textContent = !settings.master
-    ? 'Paused — YouTube is untouched'
+    ? 'Paused - YouTube is untouched'
     : on === 0
       ? `Nothing hidden yet · ${total} options`
       : `${on} of ${total} hidden`;
@@ -226,7 +226,7 @@ function applyFilter() {
 function toggleFeature(id) {
   settings.features[id] = !isChecked(id);
 
-  // Turning a parent on collapses its children — they're all covered now.
+  // Turning a parent on collapses its children - they're all covered now.
   const parent = GROUPS.flatMap((g) => g.features).find((f) => f.id === id);
   if (parent?.children?.length && settings.features[id]) {
     expanded.set(id, false);

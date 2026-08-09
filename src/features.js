@@ -106,7 +106,7 @@ globalThis.FOKUS.GROUPS = [
       {
         id: 'mixes',
         label: 'Mix & radio playlists',
-        hint: 'Auto-generated "Mix — <channel>" endless playlists'
+        hint: 'Auto-generated "Mix - <channel>" endless playlists'
       },
       {
         id: 'merch',

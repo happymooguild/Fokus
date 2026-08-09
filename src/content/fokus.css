@@ -1,10 +1,10 @@
 /*
- * Fokus — every hiding rule lives here.
+ * Fokus - every hiding rule lives here.
  *
  * The content script keeps a space-separated list of enabled feature ids on
  * <html data-fokus="...">, so each rule is gated on [data-fokus~="id"].
  * Flipping a toggle rewrites that one attribute and the page updates on the
- * next style recalc — no reload, no re-injection, nothing to undo.
+ * next style recalc - no reload, no re-injection, nothing to undo.
  *
  * Selectors marked "tagged by content.js" rely on data attributes the script
  * adds, because the thing being matched isn't expressible in CSS alone.
@@ -86,7 +86,7 @@ html[data-fokus~="sidebar"] ytd-watch-flexy #secondary-inner {
 }
 
 /*
- * The player can't simply fill the freed space — YouTube caps it by viewport
+ * The player can't simply fill the freed space - YouTube caps it by viewport
  * height, so stretching the column would only push it left of a dead gap.
  * Centre the column instead, using YouTube's own width variable.
  */
@@ -163,7 +163,7 @@ html[data-fokus~="merch"] ytd-watch-metadata #middle-row,
 html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-product-list"],
 html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer[target-id="shopping_panel_for_entry_point_below_video"],
 /* The newer shopping shelf sits outside the merch shelf, in its own sidebar
-   panel — take the panel too, so no empty shell is left behind. */
+   panel - take the panel too, so no empty shell is left behind. */
 html[data-fokus~="merch"] ytd-product-list-renderer,
 html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer:has(ytd-product-list-renderer) {
   display: none !important;
@@ -177,8 +177,8 @@ html[data-fokus~="merch"] ytd-engagement-panel-section-list-renderer:has(ytd-pro
  * Two generations of videowall run side by side. The legacy one is the
  * endscreen-content grid; the current one is .ytp-fullscreen-grid, whose
  * children are all named ytp-modern-videowall-*. The grid holds nothing but
- * suggestions and is display:none except at the very end of a video — playing
- * or paused mid-video it isn't there — so taking the container is safe.
+ * suggestions and is display:none except at the very end of a video - playing
+ * or paused mid-video it isn't there - so taking the container is safe.
  */
 html[data-fokus~="endscreen_videowall"] .html5-endscreen,
 html[data-fokus~="endscreen_videowall"] .ytp-endscreen-content,

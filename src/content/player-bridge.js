@@ -3,7 +3,7 @@
  * which the isolated content-script world can't see.
  *
  * Annotations only. Autoplay is handled entirely by the content script clicking
- * the visible toggle — the player's setAutonavState leaves that toggle's state
+ * the visible toggle - the player's setAutonavState leaves that toggle's state
  * untouched, so driving both would have meant two sources of truth disagreeing.
  *
  * Rule of the file: only ever suppress, and only ever undo a suppression this

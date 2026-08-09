@@ -1,6 +1,6 @@
 # Fokus
 
-A Chrome extension that hides YouTube's distractions — and lets you put every
+A Chrome extension that hides YouTube's distractions - and lets you put every
 one of them back with a click.
 
 Fokus is 23 independent switches. Turn off the homepage feed. Keep Shorts but
@@ -10,16 +10,16 @@ didn't ask to hide.
 
 ## What you can hide
 
-**Feed & navigation** — homepage feed · Shorts · Explore & Trending ·
+**Feed & navigation** - homepage feed · Shorts · Explore & Trending ·
 More from YouTube · Subscriptions
 
-**Watch page** — video sidebar (recommended videos · live chat · playlist
+**Watch page** - video sidebar (recommended videos · live chat · playlist
 panel) · video info (buttons bar · channel row · description) · comments ·
 Mix & radio playlists · merch, tickets & offers
 
-**Player** — end screen videowall · end screen cards · autoplay · annotations
+**Player** - end screen videowall · end screen cards · autoplay · annotations
 
-**Header & search** — top header (notification bell) · irrelevant search
+**Header & search** - top header (notification bell) · irrelevant search
 results
 
 Fresh installs start with the homepage feed and Shorts hidden. Everything else
@@ -39,7 +39,7 @@ your YouTube tabs.
 ## How it works
 
 The whole extension is one idea: `src/content/fokus.css` is injected on every
-YouTube page and every rule is gated behind an attribute selector —
+YouTube page and every rule is gated behind an attribute selector -
 
 ```css
 html[data-fokus~="comments"] ytd-comments#comments { display: none !important; }
@@ -49,7 +49,7 @@ html[data-fokus~="comments"] ytd-comments#comments { display: none !important; }
 `chrome.storage.sync`. Flipping a switch rewrites one attribute, the browser
 recalculates style, and the page updates. That is why toggling is instant, why
 it reaches every open tab at once, and why turning something back on genuinely
-restores it — nothing was ever removed from the DOM.
+restores it - nothing was ever removed from the DOM.
 
 Three things can't be done in CSS, so the content script handles them:
 
