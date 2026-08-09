@@ -213,14 +213,32 @@
    * that's you changing your mind, so our own toggle follows you off — the
    * popup should never claim something the player is visibly contradicting.
    *
-   * Intent is read from a real click rather than from aria-checked, because
-   * YouTube sets that attribute itself while restoring player state, and a
-   * restore is not a decision.
+   * Intent is read from aria-checked rather than from a click, because YouTube
+   * drives this control from a keydown handler as well as a click one — a user
+   * toggling autoplay with the keyboard fires no click event at all. Watching
+   * the attribute catches every route in.
+   *
+   * The reading only starts once our own one-shot has run on this page, so the
+   * value YouTube writes while restoring player state is never mistaken for a
+   * decision. Our own nudge always writes "false", and only "true" is treated
+   * as the user speaking, so we can't trip over ourselves either.
    */
   let autoplayAppliedThisPage = false;
+  let watchedAutoplayToggle = null;
 
   function autoplayToggle() {
     return document.querySelector('.ytp-autonav-toggle-button');
+  }
+
+  function watchAutoplayToggle(el) {
+    if (el === watchedAutoplayToggle) return;
+    watchedAutoplayToggle = el;
+
+    new MutationObserver(() => {
+      if (!autoplayAppliedThisPage || !isOn('autoplay')) return;
+      if (el.getAttribute('aria-checked') !== 'true') return;
+      followUserBackToAutoplay();
+    }).observe(el, { attributes: true, attributeFilter: ['aria-checked'] });
   }
 
   function applyAutoplayOnce() {
@@ -229,10 +247,12 @@
       autoplayAppliedThisPage = false;
       return;
     }
-    if (autoplayAppliedThisPage) return;
 
     const el = autoplayToggle();
     if (!el) return;
+    watchAutoplayToggle(el);
+
+    if (autoplayAppliedThisPage) return;
 
     if (el.getAttribute('aria-checked') === 'true') {
       (el.closest('button') || el).click();
@@ -255,22 +275,6 @@
       });
     });
   }
-
-  document.addEventListener(
-    'click',
-    (event) => {
-      // isTrusted separates a real click from the one applyAutoplayOnce makes.
-      if (!event.isTrusted || !isOn('autoplay')) return;
-      if (!event.target.closest?.('.ytp-autonav-toggle-button-container, .ytp-autonav-toggle-button')) {
-        return;
-      }
-      // Let YouTube commit the new state before reading it back.
-      setTimeout(() => {
-        if (autoplayToggle()?.getAttribute('aria-checked') === 'true') followUserBackToAutoplay();
-      }, 150);
-    },
-    true
-  );
 
   function enforcePlayer() {
     applyAutoplayOnce();
